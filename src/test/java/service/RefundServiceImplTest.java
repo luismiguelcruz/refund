@@ -16,9 +16,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RefundServiceImplTest {
@@ -37,7 +36,7 @@ class RefundServiceImplTest {
 
     @Test
     void whenOrderIsNotCreated_gettingRefundsByOrder_thenExceptionIsThrown() throws OrderNotFoundException {
-        doReturn(false).when(ordersRepository).exists(any());
+        doReturn(false).when(ordersRepository).exists(anyInt());
         System.out.println();
 
         assertThrows(OrderNotFoundException.class, () -> refundService.getRefundsByOrder(1));
@@ -47,7 +46,7 @@ class RefundServiceImplTest {
     void whenOrderIsCreated_gettingRefundsByOrder_thenOrderIsReturned() throws OrderNotFoundException {
         final List<Refund> expectedRefunds = ImmutableList.of(new Refund(1, 1, Collections.emptyList()));
 
-        doReturn(true).when(ordersRepository).exists(any());
+        doReturn(true).when(ordersRepository).exists(anyInt());
         doReturn(expectedRefunds).when(refundsRepository).getRefunds(1);
 
         List<Refund> refundsByOrder = refundService.getRefundsByOrder(1);
@@ -59,7 +58,7 @@ class RefundServiceImplTest {
     void whenOrderIsNotCreated_creatingRefund_thenExceptionIsThrown() throws OrderNotFoundException {
         final Refund refund = new Refund(1, 1, Collections.emptyList());
 
-        doReturn(false).when(ordersRepository).exists(any());
+        doReturn(false).when(ordersRepository).exists(anyInt());
 
         assertThrows(OrderNotFoundException.class, () -> refundService.createRefund(refund));
     }
