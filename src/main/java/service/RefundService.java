@@ -13,4 +13,6 @@ public interface RefundService {
     public List<Refund> getRefundsByOrder(final int idOrder) throws OrderNotFoundException;
 
     public Refund createRefund(final Refund refund) throws RefundNotFoundException, OrderNotFoundException, ItemNotFoundException, ItemQuantityErrorException;
+
+    public void deleteRefund(final int idRefund) throws RefundNotFoundException, OrderNotFoundException;
 }

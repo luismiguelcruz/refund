@@ -13,6 +13,7 @@ import repository.RefundsRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RefundServiceImpl implements RefundService {
@@ -28,6 +29,7 @@ public class RefundServiceImpl implements RefundService {
         System.out.println();
     }
 
+    @Override
     public List<Refund> getRefundsByOrder(final int idOrder) throws OrderNotFoundException {
         // Returns all the refunds by order
         if (!ordersRepository.exists(idOrder)) {
@@ -37,12 +39,27 @@ public class RefundServiceImpl implements RefundService {
         return refundsRepository.getRefunds(idOrder);
     }
 
+    @Override
     public Refund createRefund(final Refund refund)
             throws RefundNotFoundException, OrderNotFoundException, ItemNotFoundException, ItemQuantityErrorException {
         // Creates a refund if the order is correct and we didn't refund all the money for an order yet
         checkValidRefund(refund);
 
         return refundsRepository.createRefund(refund);
+    }
+
+    @Override
+    public void deleteRefund(final int idRefund) throws RefundNotFoundException, OrderNotFoundException {
+        if (!refundsRepository.exists(idRefund)) {
+            throw new OrderNotFoundException();
+        }
+
+        final Optional<Refund> refund = refundsRepository.getRefund(idRefund);
+        if (!refund.isPresent()) {
+            throw new RefundNotFoundException();
+        }
+
+        refundsRepository.removeRefund(idRefund);
     }
 
     private void checkValidRefund(final Refund refund)

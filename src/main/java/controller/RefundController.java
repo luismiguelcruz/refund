@@ -20,15 +20,23 @@ public class RefundController {
     RefundService refundService;
 
 
-    @GetMapping(path="/{idOrder}")
+    @GetMapping("/{idOrder}")
     public ResponseEntity<List<Refund>> getRefunds(@PathVariable int idOrder) throws OrderNotFoundException {
         return ResponseEntity.ok(refundService.getRefundsByOrder(idOrder));
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<Refund> create(@RequestBody final Refund refund)
             throws ItemNotFoundException, RefundNotFoundException, ItemQuantityErrorException, OrderNotFoundException {
         return ResponseEntity.status(HttpStatus.CREATED).body(refundService.createRefund(refund));
+    }
+
+    @DeleteMapping("/{idOrder}")
+    public ResponseEntity<Refund> create(@PathVariable int idOrder)
+            throws ItemNotFoundException, RefundNotFoundException, ItemQuantityErrorException, OrderNotFoundException {
+        refundService.deleteRefund(idOrder);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
 
